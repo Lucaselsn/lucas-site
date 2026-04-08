@@ -305,7 +305,8 @@ export default function WorkPage() {
     autoPlay
     muted
     playsInline
-    className="max-h-full max-w-full object-contain"
+    loop
+    className="max-h-full max-w-full object-contain mix-blend-screen"
   >
     <source src="/logo-transparent.webm" type="video/webm" />
   </video>
