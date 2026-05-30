@@ -38,7 +38,7 @@ export default function ShopPage() {
            <div className="flex h-16 w-[140px] items-center justify-center overflow-hidden sm:w-[220px] md:h-32 md:w-[520px]">
   {/* Static image on mobile, video on desktop */}
   <img
-    src="/logo.png"
+    src="/logo2.png"
     alt="Logo"
     className="max-h-full max-w-full object-contain md:hidden"
   />

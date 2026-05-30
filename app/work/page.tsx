@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 type Category = "Music Videos" | "Vlogs" | "Show Recaps";
@@ -12,11 +12,13 @@ type WorkItem = {
   year: string;
   link: string;
   category: Category;
-  platform: "vimeo" | "youtube";
+  platform: "local" | "youtube";
+  src?: string;
+  poster?: string;
 };
 
 const SHOW_SHOP = false;
-const SHOW_SHOW_RECAPS = false;
+const SHOW_SHOW_RECAPS = true;
 
 const allWork: WorkItem[] = [
   {
@@ -25,7 +27,29 @@ const allWork: WorkItem[] = [
     year: "2026",
     link: "https://vimeo.com/1180881347",
     category: "Music Videos",
-    platform: "vimeo",
+    platform: "local",
+    src: "/clips/2-seater.mp4",
+    poster: "/clips/2-seater.jpg",
+  },
+  {
+    title: "Who Ain't Into Fashion",
+    artist: "Slimeballchrissy",
+    year: "2026",
+    link: "",
+    category: "Music Videos",
+    platform: "local",
+    src: "/clips/who-aint-into-fashion.mp4",
+    poster: "/clips/who-aint-into-fashion.jpg",
+  },
+  {
+    title: "Ok Cool",
+    artist: "Spida",
+    year: "2026",
+    link: "",
+    category: "Music Videos",
+    platform: "local",
+    src: "/clips/ok-cool.mp4",
+    poster: "/clips/ok-cool.jpg",
   },
   {
     title: "La Hoes",
@@ -33,7 +57,9 @@ const allWork: WorkItem[] = [
     year: "2025",
     link: "https://vimeo.com/1180777940",
     category: "Music Videos",
-    platform: "vimeo",
+    platform: "local",
+    src: "/clips/la-hoes.mp4",
+    poster: "/clips/la-hoes.jpg",
   },
   {
     title: "I Need You",
@@ -41,7 +67,9 @@ const allWork: WorkItem[] = [
     year: "2025",
     link: "https://vimeo.com/1180778617",
     category: "Music Videos",
-    platform: "vimeo",
+    platform: "local",
+    src: "/clips/i-need-you.mp4",
+    poster: "/clips/i-need-you.jpg",
   },
   {
     title: "Nobody",
@@ -49,7 +77,9 @@ const allWork: WorkItem[] = [
     year: "2025",
     link: "https://vimeo.com/1180779048",
     category: "Music Videos",
-    platform: "vimeo",
+    platform: "local",
+    src: "/clips/nobody.mp4",
+    poster: "/clips/nobody.jpg",
   },
   {
     title: "FANSSS",
@@ -57,7 +87,9 @@ const allWork: WorkItem[] = [
     year: "2025",
     link: "https://vimeo.com/1180780398",
     category: "Music Videos",
-    platform: "vimeo",
+    platform: "local",
+    src: "/clips/fansss.mp4",
+    poster: "/clips/fansss.jpg",
   },
   {
     title: "2 Da Maxx",
@@ -65,7 +97,9 @@ const allWork: WorkItem[] = [
     year: "2024",
     link: "https://vimeo.com/1180881405",
     category: "Music Videos",
-    platform: "vimeo",
+    platform: "local",
+    src: "/clips/2-da-maxx.mp4",
+    poster: "/clips/2-da-maxx.jpg",
   },
   {
     title: "Sexyy Red",
@@ -73,7 +107,9 @@ const allWork: WorkItem[] = [
     year: "2024",
     link: "https://vimeo.com/1180881369",
     category: "Music Videos",
-    platform: "vimeo",
+    platform: "local",
+    src: "/clips/sexyy-red.mp4",
+    poster: "/clips/sexyy-red.jpg",
   },
 
   {
@@ -158,10 +194,28 @@ const allWork: WorkItem[] = [
   },
 
   {
+    title: "BoxBoys ATL Tour Recap",
+    artist: "BoxBoys",
+    year: "2026",
+    link: "",
+    category: "Show Recaps",
+    platform: "local",
+    src: "/clips/boxboys-atl.mp4",
+    poster: "/clips/boxboys-atl.jpg",
+  },
+  {
     title: "Show Recap 01",
     artist: "lucaselsn",
     year: "2025",
     link: "https://www.youtube.com/watch?v=DCqJdcf2ZGw",
+    category: "Show Recaps",
+    platform: "youtube",
+  },
+  {
+    title: "Show Recap 02",
+    artist: "lucaselsn",
+    year: "2024",
+    link: "https://www.youtube.com/watch?v=Jznabo_0-XU",
     category: "Show Recaps",
     platform: "youtube",
   },
@@ -178,35 +232,65 @@ function getYouTubeId(url: string) {
   return match?.[1] ?? "";
 }
 
-function getVimeoId(url: string) {
-  const match = url.match(/vimeo\.com\/(\d+)/);
-  return match?.[1] ?? "";
-}
+function LocalVideoCard({ item }: { item: WorkItem }) {
+  const hasLink = !!item.link;
+  const ref = useRef<HTMLVideoElement>(null);
+  const [shouldLoad, setShouldLoad] = useState(false);
 
-function VimeoCard({ item }: { item: WorkItem }) {
-  const vimeoId = getVimeoId(item.link);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    // Only load when near the viewport; play/pause as it scrolls in and out.
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShouldLoad(true);
+          el.play().catch(() => {});
+        } else {
+          el.pause();
+        }
+      },
+      { rootMargin: "200px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
-  return (
-    <a href={item.link} target="_blank" rel="noreferrer" className="group block">
+  const inner = (
+    <div className="group block">
       <div className="relative aspect-video overflow-hidden rounded-[1.5rem] bg-black">
-        <iframe
-          src={`https://player.vimeo.com/video/${vimeoId}?title=0&byline=0&portrait=0`}
-          className="h-full w-full transition duration-700 group-hover:scale-[1.01]"
-          loading="lazy"
-          allow="autoplay; fullscreen; picture-in-picture"
-          allowFullScreen
-          title={item.title}
+        <video
+          ref={ref}
+          muted
+          playsInline
+          loop
+          poster={item.poster}
+          preload={shouldLoad ? "auto" : "none"}
+          src={shouldLoad ? item.src : undefined}
+          className="h-full w-full object-cover transition duration-700 group-hover:scale-[1.01]"
         />
         <div className="pointer-events-none absolute inset-0 ring-1 ring-white/10 transition duration-500 group-hover:ring-white/20" />
       </div>
 
-      <div className="mt-4 flex items-center justify-between">
-        <p className="text-sm uppercase tracking-[0.22em] text-white/60 transition group-hover:text-white">
-          Open on Vimeo
-        </p>
-      </div>
-    </a>
+      {hasLink && (
+        <div className="mt-4 flex items-center justify-between">
+          <p className="text-sm uppercase tracking-[0.22em] text-white/60 transition group-hover:text-white">
+            Open on Vimeo
+          </p>
+        </div>
+      )}
+    </div>
   );
+
+  if (hasLink) {
+    return (
+      <a href={item.link} target="_blank" rel="noreferrer">
+        {inner}
+      </a>
+    );
+  }
+
+  return inner;
 }
 
 function YouTubeHoverCard({
@@ -276,10 +360,7 @@ export default function WorkPage() {
 
   const filteredWork = useMemo(() => {
     return [...allWork]
-      .filter((item) => {
-        if (!SHOW_SHOW_RECAPS && item.category === "Show Recaps") return false;
-        return item.category === activeTab;
-      })
+      .filter((item) => item.category === activeTab)
       .sort((a, b) => Number(b.year) - Number(a.year));
   }, [activeTab]);
 
@@ -288,60 +369,37 @@ export default function WorkPage() {
       <header className="fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-black/40 backdrop-blur">
         <div className="relative mx-auto flex max-w-7xl items-center justify-between px-6 py-6">
           <nav className="flex gap-6 text-xs uppercase tracking-[0.25em]">
-            <Link href="/work" className="text-white">
-              Work
-            </Link>
-            <Link href="/about" className="text-white/70 hover:text-white">
-              About
-            </Link>
+            <Link href="/work" className="text-white">Work</Link>
+            <Link href="/about" className="text-white/70 hover:text-white">About</Link>
           </nav>
 
           <Link
             href="/"
-            className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center"
+            className="absolute left-1/2 top-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center"
           >
             <div className="flex h-16 w-[140px] items-center justify-center overflow-hidden sm:w-[220px] md:h-32 md:w-[520px]">
-  {/* Static image on mobile, video on desktop */}
-  <img
-    src="/logo.png"
-    alt="Logo"
-    className="max-h-full max-w-full object-contain md:hidden"
-  />
-  <video
-    autoPlay
-    muted
-    playsInline
-    loop
-    className="hidden max-h-full max-w-full object-contain md:block"
-  >
-    <source src="/logo-transparent.webm" type="video/webm" />
-  </video>
-</div>
+              <img src="/logo2.png" alt="Logo" className="max-h-full max-w-full object-contain md:hidden" />
+              <video autoPlay muted playsInline loop className="hidden max-h-full max-w-full object-contain md:block">
+                <source src="/logo-transparent.webm" type="video/webm" />
+              </video>
+            </div>
           </Link>
 
           <nav className="flex gap-6 text-xs uppercase tracking-[0.25em]">
             {SHOW_SHOP && (
-              <Link href="/shop" className="text-white/70 hover:text-white">
-                Shop
-              </Link>
+              <Link href="/shop" className="text-white/70 hover:text-white">Shop</Link>
             )}
-            <Link href="/contact" className="text-white/70 hover:text-white">
-              Contact
-            </Link>
+            <Link href="/contact" className="text-white/70 hover:text-white">Contact</Link>
           </nav>
         </div>
       </header>
 
       <main className="mx-auto max-w-[1500px] px-6 pb-24 pt-[140px]">
         <div className="mb-14">
-          <p className="text-xs uppercase tracking-[0.3em] text-white/50">
-            Selected Work
-          </p>
-          <h1 className="mt-4 text-5xl font-medium tracking-[-0.06em] md:text-8xl">
-            Archive
-          </h1>
+          <p className="text-xs uppercase tracking-[0.3em] text-white/50">Selected Work</p>
+          <h1 className="mt-4 text-5xl font-medium tracking-[-0.06em] md:text-8xl">Archive</h1>
           <p className="mt-4 max-w-2xl text-sm leading-7 text-white/60 md:text-base">
-            A curated selection of music videos and vlogs.
+            A curated selection of music videos, vlogs, and show recaps.
           </p>
         </div>
 
@@ -349,7 +407,6 @@ export default function WorkPage() {
           <div className="inline-flex flex-wrap gap-2 rounded-full border border-white/10 bg-white/[0.03] p-2">
             {tabs.map((tab) => {
               const isActive = activeTab === tab;
-
               return (
                 <button
                   key={tab}
@@ -383,31 +440,25 @@ export default function WorkPage() {
           >
             {filteredWork.map((item) => (
               <div
-                key={`${item.category}-${item.link}`}
+                key={`${item.category}-${item.title}-${item.artist}`}
                 className="border-t border-white/10 pt-10"
               >
                 <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
                   <div>
-                    <p className="text-xs uppercase tracking-[0.25em] text-white/50">
-                      {item.artist}
-                    </p>
-                    <h2 className="mt-3 text-4xl font-medium tracking-[-0.05em] md:text-6xl">
-                      {item.title}
-                    </h2>
+                    <p className="text-xs uppercase tracking-[0.25em] text-white/50">{item.artist}</p>
+                    <h2 className="mt-3 text-4xl font-medium tracking-[-0.05em] md:text-6xl">{item.title}</h2>
                   </div>
 
                   <div className="flex items-center gap-4">
-                    <p className="text-sm uppercase tracking-[0.22em] text-white/45">
-                      {item.year}
-                    </p>
+                    <p className="text-sm uppercase tracking-[0.22em] text-white/45">{item.year}</p>
                     <span className="rounded-full border border-white/10 px-3 py-1 text-[10px] uppercase tracking-[0.22em] text-white/50">
                       {item.category}
                     </span>
                   </div>
                 </div>
 
-                {item.platform === "vimeo" ? (
-                  <VimeoCard item={item} />
+                {item.platform === "local" ? (
+                  <LocalVideoCard item={item} />
                 ) : (
                   <YouTubeHoverCard
                     item={item}

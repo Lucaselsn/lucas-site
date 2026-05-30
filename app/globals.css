@@ -12,15 +12,22 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  /* Force dark base so mobile never flashes white before React paints */
+  background: #000;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #000;
+  color: #ededed;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  /* The fullscreen hero videos are wider than the viewport — clip the overflow
+     so mobile users can't accidentally scroll sideways. */
+  overflow-x: hidden;
+}
+
+/* Smoother video scaling / no tap-highlight flash on mobile */
+video {
+  -webkit-tap-highlight-color: transparent;
 }

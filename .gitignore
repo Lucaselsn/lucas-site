@@ -41,3 +41,8 @@ yarn-error.log*
 next-env.d.ts
 
 .vercel
+
+# original (uncompressed) source videos — kept locally, never deployed/committed
+/_originals_backup
+/public/Videos
+optimize_videos.sh

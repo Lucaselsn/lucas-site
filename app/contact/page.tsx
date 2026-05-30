@@ -1,54 +1,40 @@
+"use client";
+
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
+import { useForm, ValidationError } from "@formspree/react";
+
+const SHOW_SHOP = false;
 
 export default function ContactPage() {
-  const SHOW_SHOP = false;
+  const [state, handleSubmit] = useForm("xaqkzwka");
 
   return (
     <div className="min-h-screen bg-black text-white">
       <header className="fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-black/40 backdrop-blur">
         <div className="relative mx-auto flex max-w-7xl items-center justify-between px-6 py-6">
           <nav className="flex gap-6 text-xs uppercase tracking-[0.25em]">
-            <Link href="/work" className="text-white/70 hover:text-white">
-              Work
-            </Link>
-            <Link href="/about" className="text-white/70 hover:text-white">
-              About
-            </Link>
+            <Link href="/work" className="text-white/70 hover:text-white">Work</Link>
+            <Link href="/about" className="text-white/70 hover:text-white">About</Link>
           </nav>
 
           <Link
             href="/"
-            className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center"
+            className="absolute left-1/2 top-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center"
           >
-           <div className="flex h-16 w-[140px] items-center justify-center overflow-hidden sm:w-[220px] md:h-32 md:w-[520px]">
-  {/* Static image on mobile, video on desktop */}
-  <img
-    src="/logo.png"
-    alt="Logo"
-    className="max-h-full max-w-full object-contain md:hidden"
-  />
-  <video
-    autoPlay
-    muted
-    playsInline
-    loop
-    className="hidden max-h-full max-w-full object-contain md:block"
-  >
-    <source src="/logo-transparent.webm" type="video/webm" />
-  </video>
-</div>
+            <div className="flex h-16 w-[140px] items-center justify-center overflow-hidden sm:w-[220px] md:h-32 md:w-[520px]">
+              <img src="/logo2.png" alt="Logo" className="max-h-full max-w-full object-contain md:hidden" />
+              <video autoPlay muted playsInline loop className="hidden max-h-full max-w-full object-contain md:block">
+                <source src="/logo-transparent.webm" type="video/webm" />
+              </video>
+            </div>
           </Link>
 
           <nav className="flex gap-6 text-xs uppercase tracking-[0.25em]">
             {SHOW_SHOP && (
-              <Link href="/shop" className="text-white/70 hover:text-white">
-                Shop
-              </Link>
+              <Link href="/shop" className="text-white/70 hover:text-white">Shop</Link>
             )}
-            <Link href="/contact" className="text-white">
-              Contact
-            </Link>
+            <Link href="/contact" className="text-white">Contact</Link>
           </nav>
         </div>
       </header>
@@ -56,38 +42,16 @@ export default function ContactPage() {
       <main className="mx-auto max-w-7xl px-6 pb-16 pt-[140px]">
         <div className="mb-10 flex flex-col gap-4 md:mb-14 md:flex-row md:items-end md:justify-between">
           <div>
-            <p className="text-xs uppercase tracking-[0.3em] text-white/55">
-              Contact
-            </p>
-            <h1 className="mt-3 text-4xl tracking-[-0.05em] md:text-7xl">
-              Inquiries.
-            </h1>
+            <p className="text-xs uppercase tracking-[0.3em] text-white/55">Contact</p>
+            <h1 className="mt-3 text-4xl tracking-[-0.05em] md:text-7xl">Inquiries.</h1>
           </div>
 
           <div className="flex items-center gap-5 text-xs uppercase tracking-[0.22em] text-white/60">
-            <a
-              href="https://instagram.com/lucaselsn"
-              target="_blank"
-              rel="noreferrer"
-              className="transition hover:text-white"
-            >
+            <a href="https://instagram.com/lucaselsn" target="_blank" rel="noreferrer" className="transition hover:text-white">
               Instagram
             </a>
-            <a
-              href="https://www.youtube.com/@Lucaselsn"
-              target="_blank"
-              rel="noreferrer"
-              className="transition hover:text-white"
-            >
+            <a href="https://www.youtube.com/@Lucaselsn" target="_blank" rel="noreferrer" className="transition hover:text-white">
               YouTube
-            </a>
-            <a
-              href="https://linkedin.com"
-              target="_blank"
-              rel="noreferrer"
-              className="transition hover:text-white"
-            >
-              LinkedIn
             </a>
           </div>
         </div>
@@ -95,8 +59,7 @@ export default function ContactPage() {
         <div className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr]">
           <div className="space-y-6">
             <p className="max-w-md text-sm leading-7 text-white/68 md:text-base">
-              Use this page for music videos, creative direction, branded
-              visuals, and artist development inquiries.
+              Use this page for music videos, creative direction, branded visuals, and artist development inquiries.
             </p>
             <div className="space-y-3 text-sm uppercase tracking-[0.2em] text-white/58">
               <p>Based in Atlanta / Los Angeles</p>
@@ -106,58 +69,110 @@ export default function ContactPage() {
             </div>
           </div>
 
-          <form className="grid gap-4">
-            <input
-              type="text"
-              placeholder="Company or Artist Name"
-              className="border-b border-white/15 bg-transparent px-0 py-4 text-sm text-white outline-none placeholder:text-white/38 focus:border-white/40"
-            />
-            <input
-              type="text"
-              placeholder="Instagram Link"
-              className="border-b border-white/15 bg-transparent px-0 py-4 text-sm text-white outline-none placeholder:text-white/38 focus:border-white/40"
-            />
-            <input
-              type="email"
-              placeholder="Email"
-              className="border-b border-white/15 bg-transparent px-0 py-4 text-sm text-white outline-none placeholder:text-white/38 focus:border-white/40"
-            />
-            <div className="grid gap-4 md:grid-cols-2">
-              <input
-                type="text"
-                placeholder="Based Out Of"
-                className="border-b border-white/15 bg-transparent px-0 py-4 text-sm text-white outline-none placeholder:text-white/38 focus:border-white/40"
-              />
-              <input
-                type="text"
-                placeholder="Phone Number"
-                className="border-b border-white/15 bg-transparent px-0 py-4 text-sm text-white outline-none placeholder:text-white/38 focus:border-white/40"
-              />
+          {state.succeeded ? (
+            <div className="flex items-center justify-center py-20">
+              <div className="text-center">
+                <p className="text-2xl font-medium tracking-[-0.03em]">Message received.</p>
+                <p className="mt-3 text-sm text-white/50">I&apos;ll get back to you soon.</p>
+              </div>
             </div>
-            <input
-              type="text"
-              placeholder="Subject for Inquiry"
-              className="border-b border-white/15 bg-transparent px-0 py-4 text-sm text-white outline-none placeholder:text-white/38 focus:border-white/40"
-            />
-            <input
-              type="text"
-              placeholder="Website Link"
-              className="border-b border-white/15 bg-transparent px-0 py-4 text-sm text-white outline-none placeholder:text-white/38 focus:border-white/40"
-            />
-            <textarea
-              placeholder="Message"
-              rows={6}
-              className="resize-none border-b border-white/15 bg-transparent px-0 py-4 text-sm text-white outline-none placeholder:text-white/38 focus:border-white/40"
-            />
+          ) : (
+            <form onSubmit={handleSubmit} className="grid gap-4">
+              {/* Honeypot: hidden from people, but bots fill every field.
+                  Formspree silently discards any submission where this is filled. */}
+              <input
+                type="text"
+                name="_gotcha"
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+                className="hidden"
+              />
 
-            <button
-              type="submit"
-              className="mt-4 inline-flex w-fit items-center rounded-full border border-white/20 px-6 py-3 text-sm uppercase tracking-[0.22em] text-white transition hover:bg-white hover:text-black"
-            >
-              Submit
-              <ExternalLink className="ml-2 h-4 w-4" />
-            </button>
-          </form>
+              <div>
+                <input
+                  type="text"
+                  name="artist_or_company"
+                  placeholder="Company or Artist Name"
+                  className="w-full border-b border-white/15 bg-transparent px-0 py-4 text-sm text-white outline-none placeholder:text-white/38 focus:border-white/40"
+                />
+                <ValidationError field="artist_or_company" errors={state.errors} className="mt-1 text-xs text-red-400" />
+              </div>
+
+              <div>
+                <input
+                  type="text"
+                  name="instagram"
+                  placeholder="Instagram Link"
+                  className="w-full border-b border-white/15 bg-transparent px-0 py-4 text-sm text-white outline-none placeholder:text-white/38 focus:border-white/40"
+                />
+              </div>
+
+              <div>
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Email"
+                  required
+                  className="w-full border-b border-white/15 bg-transparent px-0 py-4 text-sm text-white outline-none placeholder:text-white/38 focus:border-white/40"
+                />
+                <ValidationError field="email" errors={state.errors} className="mt-1 text-xs text-red-400" />
+              </div>
+
+              <div className="grid gap-4 md:grid-cols-2">
+                <input
+                  type="text"
+                  name="location"
+                  placeholder="Based Out Of"
+                  className="border-b border-white/15 bg-transparent px-0 py-4 text-sm text-white outline-none placeholder:text-white/38 focus:border-white/40"
+                />
+                <input
+                  type="text"
+                  name="phone"
+                  placeholder="Phone Number"
+                  className="border-b border-white/15 bg-transparent px-0 py-4 text-sm text-white outline-none placeholder:text-white/38 focus:border-white/40"
+                />
+              </div>
+
+              <div>
+                <input
+                  type="text"
+                  name="subject"
+                  placeholder="Subject for Inquiry"
+                  className="w-full border-b border-white/15 bg-transparent px-0 py-4 text-sm text-white outline-none placeholder:text-white/38 focus:border-white/40"
+                />
+              </div>
+
+              <div>
+                <input
+                  type="text"
+                  name="website"
+                  placeholder="Website Link"
+                  className="w-full border-b border-white/15 bg-transparent px-0 py-4 text-sm text-white outline-none placeholder:text-white/38 focus:border-white/40"
+                />
+              </div>
+
+              <div>
+                <textarea
+                  name="message"
+                  placeholder="Message"
+                  rows={6}
+                  required
+                  className="w-full resize-none border-b border-white/15 bg-transparent px-0 py-4 text-sm text-white outline-none placeholder:text-white/38 focus:border-white/40"
+                />
+                <ValidationError field="message" errors={state.errors} className="mt-1 text-xs text-red-400" />
+              </div>
+
+              <button
+                type="submit"
+                disabled={state.submitting}
+                className="mt-4 inline-flex w-fit items-center rounded-full border border-white/20 px-6 py-3 text-sm uppercase tracking-[0.22em] text-white transition hover:bg-white hover:text-black disabled:opacity-40"
+              >
+                {state.submitting ? "Sending..." : "Submit"}
+                <ExternalLink className="ml-2 h-4 w-4" />
+              </button>
+            </form>
+          )}
         </div>
       </main>
     </div>
